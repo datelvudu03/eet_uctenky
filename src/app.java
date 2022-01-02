@@ -1,12 +1,60 @@
+import com.opencsv.CSVWriter;
+
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class app {
     public static void main(String[] args) {
+
+        GUI gui = new GUI();
+        String finalFile = gui.runToText();
+        String finalCVS = gui.runToCVS();
+        appDo(finalFile);
+        if (finalCVS != null){
+            System.out.println("Converting to CVS");
+            convertToCSV(finalFile,finalCVS);
+        }
+    }
+    public static void convertToCSV(String finalFile,String finalFileCVS){
+        try {
+            CSVWriter writer = new CSVWriter(new FileWriter(finalFileCVS));
+            try {
+                FileInputStream fileInputStream = new FileInputStream(finalFile);
+                Scanner scanner = new Scanner(fileInputStream);
+                String temp = "";
+                ArrayList<String> tem1p = new ArrayList<>();
+                while (scanner.hasNext()){
+                    String innerTemp = scanner.nextLine();
+                    if(innerTemp.equals("---============---")){
+                        temp += ("---=---" + "\n");
+                        tem1p.add(temp);
+                        temp = " ";
+                    }else {
+                        temp += (innerTemp + "\n");
+                    }
+                    if (tem1p.size()==4){
+                        String[] array = {tem1p.get(0),tem1p.get(1),tem1p.get(2),tem1p.get(3)};
+                        writer.writeNext(array);
+                        tem1p.clear();
+                    }
+                }
+                scanner.close();
+            }catch (IOException ex){
+                System.out.println(ex);
+            }
+            writer.flush();
+            System.out.println("done");
+        }catch (Exception ex){
+            System.out.println(ex);
+
+        }
+    }
+
+    public static void appDo(String path) {
         double total = 0, dph21 = 0, dph15 = 0;
         try {
-            File fOut = new File("C:\\Users\\DAA\\Desktop\\uctencky.txt");
+            File fOut = new File(path);
             FileOutputStream fos = new FileOutputStream(fOut);
 
             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fos));
@@ -124,6 +172,7 @@ public class app {
                 bufferedWriter.newLine();
                 bufferedWriter.write(bill.text201);
                 bufferedWriter.newLine();
+                assert fik != null;
                 String fik1 = fik.substring(15);
                 fik = fik.substring(0, 15);
                 bufferedWriter.write(bill.text21 + fik);
@@ -145,10 +194,11 @@ public class app {
             System.out.println("Error");
             e.printStackTrace();
         }
-        System.out.println("done");
-        System.out.println(total);
-        System.out.println(dph15);
-        System.out.println(dph21);
+        System.out.println("========================");
+        System.out.println("The total is " + total);
+        System.out.println("The total of dph15 is " + dph15);
+        System.out.println("The total of dph21 is " + dph21);
+        System.out.println("========================");
     }
 
     public static ArrayList<BillItem> createItemList() {
@@ -244,70 +294,70 @@ public class app {
     }
 
     public static HashMap<String, String> addExToList(HashMap<String, String> list) {
+        //1st shop
+        list.put("Burton orginal red 23", "21.0");
+        list.put("Burton White 20", "21.0");
+        list.put("burton white", "21.0");
+        list.put("Burton White 23", "21.0");
+        list.put("benson hedges silver 20", "21.0");
+        list.put("BENSON- HEDGES white", "21.0");
+        list.put("marjhoro", "21.0");
+        list.put("benson hedges", "21.0");
+        list.put("Vic 23 blue", "21.0");
+        list.put("rgd blue", "21.0");
+        list.put("viceroy 22 red", "21.0");
 
-        /*list.put("Burton orginal red 23","21.0");
-        list.put("Burton White 20","21.0");
-        list.put("burton white","21.0");
-        list.put("Burton White 23","21.0");
-        list.put("benson hedges silver 20","21.0");
-        list.put("BENSON- HEDGES white","21.0");
-        list.put("marjhoro","21.0");
-        list.put("benson hedges","21.0");
-        list.put("Vic 23 blue","21.0");
-        list.put("rgd blue","21.0");
-        list.put("viceroy 22 red","21.0");
-
-        list.put("Zboží","21.0");
-        list.put("Budweiser 0.5L","21.0");
-        list.put("Budějovický Světlé 500g","21.0");
-        list.put("relax 300ml","15.0");
-        list.put("Water Pear","15.0");
-        list.put("brikety 25kg","21.0");
-        list.put("oplat","15.0");
-        list.put("Med Květový Smíšený 900g","21.0");*/
-
-        /*list.put("Benso Hedges black big box","21.0");
-        list.put("Burton Red 23","21.0");
-        list.put("winston blue 22","21.0");
-        list.put("Wiston Red Normal","21.0");
-        list.put("lucky strike","21.0");
-        list.put("Benson Hedgeh silver","21.0");
-        list.put("C.g.Camel Since 1913 Filters","21.0");
-        list.put("LD sl pink","21.0");
-        list.put("Burton orignal red 22","21.0");
-        list.put("Burton White 23","21.0");
-        list.put("bebson hedges silver","21.0");
-        list.put("chesjeptield","21.0");
-        list.put("C.g.Winston blue","21.0");
-        list.put("Burton White Bigbox","21.0");
-        list.put("CAMEL","21.0");
-        list.put("wiston","21.0");
-        list.put("winston 22s","21.0");
-        list.put("Gauloises Blue 20","21.0");
-        list.put("Burton White Bigbo","21.0");
-        list.put("pall mall ksblue","21.0");
-        list.put("C.g.Camel Filters","21.0");
-        list.put("viceroy blue 22","21.0");
-        list.put("cheterfield caps blue","21.0");
-        list.put("Wiston Blue 100s","21.0");
-        list.put("Burton orignal red 23","21.0");
-        list.put("LD sl violet","21.0");
-        list.put("winston red","21.0");
-        list.put("winston blue","21.0");
-        list.put("C.g.Winston Red","21.0");
-        list.put("LD sl pin","21.0");
-        list.put("C.g.Benson & Hedges silver slide","21.0");
-        list.put("chesterfeld blue","21.0");
-        list.put("viceroy   40","21.0");
-        list.put("phall mall","21.0");
-        list.put("BURTON red","21.0");
-        list.put("chsepjield","21.0");
-        list.put("Burton orginal red 23","21.0");
-        list.put("chestepheld","21.0");
-        list.put("burton white","21.0");
-        list.put("Pall Mall blue 23","21.0");
-        list.put("BURTON green","21.0");
-        list.put("Zboží","21.0");*/
+        list.put("Zboží", "21.0");
+        list.put("Budweiser 0.5L", "21.0");
+        list.put("Budějovický Světlé 500g", "21.0");
+        list.put("relax 300ml", "15.0");
+        list.put("Water Pear", "15.0");
+        list.put("brikety 25kg", "21.0");
+        list.put("oplat", "15.0");
+        list.put("Med Květový Smíšený 900g", "21.0");
+        //2nd shop
+        list.put("Benso Hedges black big box", "21.0");
+        list.put("Burton Red 23", "21.0");
+        list.put("winston blue 22", "21.0");
+        list.put("Wiston Red Normal", "21.0");
+        list.put("lucky strike", "21.0");
+        list.put("Benson Hedgeh silver", "21.0");
+        list.put("C.g.Camel Since 1913 Filters", "21.0");
+        list.put("LD sl pink", "21.0");
+        list.put("Burton orignal red 22", "21.0");
+        list.put("Burton White 23", "21.0");
+        list.put("bebson hedges silver", "21.0");
+        list.put("chesjeptield", "21.0");
+        list.put("C.g.Winston blue", "21.0");
+        list.put("Burton White Bigbox", "21.0");
+        list.put("CAMEL", "21.0");
+        list.put("wiston", "21.0");
+        list.put("winston 22s", "21.0");
+        list.put("Gauloises Blue 20", "21.0");
+        list.put("Burton White Bigbo", "21.0");
+        list.put("pall mall ksblue", "21.0");
+        list.put("C.g.Camel Filters", "21.0");
+        list.put("viceroy blue 22", "21.0");
+        list.put("cheterfield caps blue", "21.0");
+        list.put("Wiston Blue 100s", "21.0");
+        list.put("Burton orignal red 23", "21.0");
+        list.put("LD sl violet", "21.0");
+        list.put("winston red", "21.0");
+        list.put("winston blue", "21.0");
+        list.put("C.g.Winston Red", "21.0");
+        list.put("LD sl pin", "21.0");
+        list.put("C.g.Benson & Hedges silver slide", "21.0");
+        list.put("chesterfeld blue", "21.0");
+        list.put("viceroy   40", "21.0");
+        list.put("phall mall", "21.0");
+        list.put("BURTON red", "21.0");
+        list.put("chsepjield", "21.0");
+        list.put("Burton orginal red 23", "21.0");
+        list.put("chestepheld", "21.0");
+        list.put("burton white", "21.0");
+        list.put("Pall Mall blue 23", "21.0");
+        list.put("BURTON green", "21.0");
+        list.put("Zboží", "21.0");
 
 
         return list;
